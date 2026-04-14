@@ -2,7 +2,7 @@
 
 > **多智能体学术论文审阅框架，对齐顶刊审稿标准。**
 >
-> 纯Claude / Claude Code skill — 无需OpenAI密钥。
+> 纯Claude / Claude Code skill — 无需额外API密钥。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Skill: Claude Code](https://img.shields.io/badge/Skill-Claude%20Code-blueviolet)]()
@@ -13,13 +13,13 @@
 
 ## 是什么
 
-论衡是一个**契约约束的多智能体论文评审与改进框架**。它把你的论文视为一个契约系统：四类专业智能体（架构师 / 撰写者 / 润色者 / 评估者团）协同作业，所有agent共享一份**持久化视觉契约**，追踪图表、术语和交叉引用。
+论衡是一个**契约约束的多智能体论文评审与改进框架**，把Claude变成一个协同工作的评审委员会。四类专业智能体（架构师 / 撰写者 / 润色者 / 评估者团）协同作业，共享一份**持久化视觉契约**——一个JSON状态记录所有图表、术语和交叉引用，在整个改稿循环中保持一致。
 
-它是 [Story2Proposal](https://arxiv.org/abs/2603.27065)（AgentAlpha 2026）框架的Claude原生再实现+扩展。**关键扩展**：
+**特色**：
 
 - **8维度 1–10 分锚定评分**，每个分数段都有显式锚点描述，对齐NeurIPS 2025 / Nature / JACS的真实审稿规范
 - **NeurIPS式16项可复现性清单**，含化学/材料学科扩展
-- **纯Claude子代理**，不依赖OpenAI/Codex MCP
+- **纯Claude子代理**，不依赖第三方API
 - **公开真实案例**：完整展示 R0→R2 在Q1论文上的轨迹
 
 ## 为什么叫"论衡"
@@ -97,10 +97,6 @@ cp -r skills/lunheng-quick ~/.claude/skills/
 | **R1** | **8.04** | +1.23 — 修排版+视觉（图位置/引用/术语统一） |
 | **R2** | **8.66** | +0.62 — 修内容（统计假设、超参表、消融搬入正文） |
 
-对照[Story2Proposal原文报告](https://arxiv.org/abs/2603.27065)：
-- DirectChat单次输出: **3.96**
-- Story2Proposal（混合backbone）: **6.15**
-
 📊 完整每维度细分 → [examples/dac_paper_case_study.md](examples/dac_paper_case_study.md)
 
 ---
@@ -132,18 +128,6 @@ cp -r skills/lunheng-quick ~/.claude/skills/
 
 ---
 
-## 与其他工具对比
-
-| 工具 | 后端 | 输出 | 多智能体 | 视觉契约 | 锚定评分 |
-|------|------|------|----------|----------|----------|
-| **论衡 (本项目)** | 仅Claude | 改稿+8维分数 | ✅ 4+8 | ✅ | ✅ NeurIPS/Nature/JACS |
-| Story2Proposal (论文) | 混合 | LaTeX手稿 | ✅ 4 | ✅ | ❌ 通用8维 |
-| auto-paper-improvement-loop | GPT-5.4 | 改稿 | ❌ 单评审 | ❌ | ❌ |
-| AI Scientist v2 | OpenAI | 端到端论文 | ✅ 树搜索 | ❌ | ❌ |
-| PaperOrchestra (Google) | 混合 | 投稿就绪稿 | ✅ | ✅ | ❌ |
-
----
-
 ## 伦理使用声明
 
 论衡用于**作者自审**——写作者在投稿前自己打磨论文。
@@ -158,9 +142,7 @@ cp -r skills/lunheng-quick ~/.claude/skills/
 
 ---
 
-## 贡献与引用
-
-引用本项目：
+## 引用
 
 ```bibtex
 @software{lunheng2026,
@@ -168,18 +150,6 @@ cp -r skills/lunheng-quick ~/.claude/skills/
   title  = {Lunheng (论衡): Multi-agent paper review framework anchored to top-tier journal rubrics},
   year   = {2026},
   url    = {https://github.com/<your-user>/Lunheng}
-}
-```
-
-也请引用本工作所基于的Story2Proposal原文：
-
-```bibtex
-@article{story2proposal2026,
-  title  = {Story2Proposal: A Scaffold for Structured Scientific Paper Writing},
-  author = {AgentAlpha Team},
-  year   = {2026},
-  eprint = {2603.27065},
-  archivePrefix = {arXiv}
 }
 ```
 

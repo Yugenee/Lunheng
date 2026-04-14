@@ -1,12 +1,12 @@
 cff-version: 1.2.0
 title: "Lunheng (论衡): Multi-agent paper review framework anchored to top-tier journal rubrics"
 abstract: >
-  A Claude-native re-implementation and extension of the Story2Proposal
-  framework. Lunheng treats paper improvement as a contract-governed
-  multi-agent process: four specialist agents (Architect, Writer, Refiner,
-  Evaluator-bench of 8 dimensions) coordinate around a persistent visual
-  contract. Scoring uses anchored 1-10 anchors per dimension, mapped to
-  actual NeurIPS 2025 / Nature / JACS reviewer rubrics.
+  Lunheng is a contract-governed multi-agent paper review framework. Four
+  specialist agents (Architect, Writer, Refiner, Evaluator-bench of 8
+  dimensions) coordinate around a persistent visual contract that tracks
+  figures, tables, terminology, and cross-references. Scoring uses anchored
+  1-10 anchors per dimension, mapped to actual NeurIPS 2025 / Nature / JACS
+  reviewer rubrics. Implemented as a pure Claude / Claude Code skill.
 authors:
   - family-names: Ding
     given-names: Yujie
@@ -24,12 +24,3 @@ keywords:
   - peer review
   - NeurIPS
   - reproducibility
-references:
-  - type: article
-    title: "Story2Proposal: A Scaffold for Structured Scientific Paper Writing"
-    authors:
-      - name: "AgentAlpha Team"
-    year: 2026
-    identifiers:
-      - type: other
-        value: "arXiv:2603.27065"

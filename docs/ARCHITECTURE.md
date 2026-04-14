@@ -1,19 +1,16 @@
 # Lunheng Architecture
 
-## Overview
+## Design Premise
 
-Lunheng treats paper improvement as a **contract-governed multi-agent process** rather than free-form generation. It is a faithful re-implementation and *extension* of the Story2Proposal framework (AgentAlpha, 2026) with these modifications:
+Lunheng treats paper improvement as a **contract-governed multi-agent process** rather than free-form generation. This addresses three predictable failure modes of single-agent paper improvement:
 
-| Aspect | Story2Proposal (original) | Lunheng |
-|--------|---------------------------|---------|
-| Backend | Mixed (GPT/Claude/Gemini/Qwen) | Pure Claude (sub-agents) |
-| Cost | Requires paid LLM API | Uses host Claude only — no extra API key |
-| Rubric | 8 dimensions | 8 dimensions, **anchored to NeurIPS/Nature/JACS** practice |
-| Score scale | Single 1–10 | 1–10 per dim + Overall (1–6) + Confidence (1–5) |
-| Reviewer output | Free-form | Structured: Strengths/Weaknesses (CRITICAL/MAJOR/MINOR) + Score-change criteria |
-| Reproducibility | General | NeurIPS-style 16-item checklist with chemistry extensions |
+1. **Structural drift** — sections lose argumentative coherence as the agent forgets early decisions.
+2. **Figure-text misalignment** — figures referenced without descriptive context, or described without referencing.
+3. **Cross-section inconsistency** — terminology, claims, or notation that contradict between sections.
 
-## The Five Roles
+The remedy is a persistent JSON contract carried *between* sub-agent invocations, plus four specialist roles that coordinate around it.
+
+## The Four Roles
 
 ```
                         ┌─────────────────────────┐
@@ -50,23 +47,18 @@ Lunheng treats paper improvement as a **contract-governed multi-agent process** 
               Aggregate R = Σ D_k / 8
               ↓
               R ≥ 7.0 ?  → STOP
-              R <  7.0 ?  → loop back to A_arch / A_w
+              R <  7.0 ?  → loop back
 ```
 
 ## Why a Visual Contract?
 
-Single-agent LLM paper generation/improvement fails in three predictable ways:
+Single-agent LLM paper improvement collapses on long manuscripts because the model must hold the entire paper in working memory; later edits forget early decisions. Lunheng spawns **fresh-context sub-agents** for each task, so the contract is the *only* mechanism that keeps the team coherent across calls.
 
-1. **Structural drift** — sections lose coherence as the agent forgets early decisions
-2. **Figure-text misalignment** — figures referenced without context, or described without referencing
-3. **Cross-section inconsistency** — terminology, claims, or notation that contradict between sections
+The contract enforces three guarantees:
 
-A persistent JSON contract carried *between* agent invocations forces:
 - Every figure has an obligated section, a description, and an actual-references log
 - Every term has one and only one canonical form across the manuscript
-- Every $\\ref{label}$ resolves; every defined label is referenced
-
-Sub-agents are spawned with **fresh context** (no memory of prior agent decisions), so the contract is the *only* mechanism that keeps the team coherent.
+- Every `\ref{label}` resolves; every defined label is referenced
 
 ## Visual Contract Schema
 
@@ -144,7 +136,7 @@ Aggregate: $R = \frac{1}{8} \sum D_k$.
 ## Convergence Criterion
 
 $$
-\text{stop if } R \geq 7.0 \text{ OR } \text{iteration} \geq \text{MAX\\_ITERATIONS (default 3)}
+\text{stop if } R \geq 7.0 \text{ OR } \text{iteration} \geq \text{MAX\_ITERATIONS (default 3)}
 $$
 
 Empirically (case study: see [examples/dac_paper_case_study.md](../examples/dac_paper_case_study.md)):
@@ -152,13 +144,13 @@ Empirically (case study: see [examples/dac_paper_case_study.md](../examples/dac_
 - Round 2 addresses content (statistical rigor, missing baselines, citation completeness; +0.5 to +1.0)
 - Round 3 polishes (diminishing returns: +0.2 to +0.4)
 
-## Comparison with Single-Agent Review
+## Why Multi-Agent Beats Single-Reviewer
 
-We compare Lunheng to a **single-Claude-agent baseline** (`auto-paper-improvement-loop-claude`) on the same DAC paper:
+We compare Lunheng to a **single-Claude-agent baseline** (`lunheng-quick`) on the same manuscript:
 
 | Approach | Mechanism | DAC Paper Round 1 Score |
 |----------|-----------|--------------------------|
-| Single Claude (baseline) | One review → fix → re-review | 7.6 / 10 |
-| **Lunheng** | 4 specialist + 8 evaluator agents + visual contract | **8.04 / 10** |
+| Single Claude (lunheng-quick) | One review → fix → re-review | 7.6 / 10 |
+| **Lunheng (full)** | 4 specialist + 8 evaluator agents + visual contract | **8.04 / 10** |
 
 The contract-governed multi-agent approach catches structural issues (e.g., dangling phantom tables, terminology drift across sections) that a single reviewer often misses because it must hold the entire paper in working memory.

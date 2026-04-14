@@ -2,7 +2,7 @@
 
 > **Multi-agent paper review framework, anchored to top-tier journal rubrics.**
 >
-> Pure Claude / Claude Code skill — no OpenAI key required.
+> Pure Claude / Claude Code skill — no extra API key required.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Skill: Claude Code](https://img.shields.io/badge/Skill-Claude%20Code-blueviolet)]()
@@ -16,34 +16,35 @@
 
 ## What is Lunheng?
 
-Lunheng is a **multi-agent paper review and improvement framework**. It treats your manuscript as a contract-governed system: four specialist agents (Architect, Writer, Refiner, Evaluator-bench) coordinate around a **persistent visual contract** that tracks figures, tables, terminology, and cross-references.
+Lunheng is a **multi-agent paper review and improvement framework** that turns Claude into a coordinated review committee. Four specialist agents (Architect, Writer, Refiner, Evaluator-bench) collaborate around a **persistent visual contract** — a shared JSON state that tracks figures, tables, terminology, and cross-references throughout the revision loop.
 
-It is a Claude-native re-implementation and *extension* of the [Story2Proposal](https://arxiv.org/abs/2603.27065) framework (AgentAlpha 2026). The key extensions:
+Distinguishing features:
 
-- **Anchored 1–10 rubric across 8 dimensions**, mapped to actual NeurIPS 2025 / Nature / JACS reviewer practice (not generic categories)
-- **NeurIPS-style 16-item Reproducibility Checklist** (with chemistry/materials extensions)
-- **Pure Claude sub-agents** — no OpenAI/Codex MCP dependency
-- **Public case study** showing R0 → R2 trajectory on a real Q1-target paper
-
----
+- **Anchored 1–10 rubric across 8 dimensions**, mapped to actual NeurIPS 2025 / Nature / JACS reviewer practice (not generic categories).
+- **NeurIPS-style 16-item Reproducibility Checklist** with chemistry/materials extensions.
+- **Pure Claude sub-agents** — no third-party API key required.
+- **Public case study** showing R0 → R2 trajectory on a real Q1-target manuscript.
 
 ## Why "Lunheng"?
 
-The name is taken from *Lunheng* (《论衡》), Wang Chong's ~80 CE treatise — the first systematic Chinese work on weighing evidence and refuting unsupported claims. The framework's job is the same: weigh every claim against the evidence the paper provides, and surface what is unsupported.
+The name comes from *Lunheng* (《论衡》), Wang Chong's ~80 CE treatise — the first systematic Chinese work on weighing evidence and refuting unsupported claims. Lunheng's job is the same: weigh every claim against the evidence the paper provides, and surface what is unsupported.
 
 ---
 
 ## Quick Start
 
-### As a Claude Code / OpenClaw skill
+### Install as a Claude Code / OpenClaw skill
 
 ```bash
-# Copy the skill into your skills directory
+git clone https://github.com/<your-user>/Lunheng.git
+cd Lunheng
+
+mkdir -p ~/.claude/skills
 cp -r skills/lunheng ~/.claude/skills/
 cp -r skills/lunheng-quick ~/.claude/skills/
 ```
 
-Then in Claude Code:
+### Run
 
 ```
 /lunheng path/to/your/paper/
@@ -99,11 +100,7 @@ Lunheng was applied to a Chinese-language chemistry-ML manuscript (DAC sorbents 
 |-------|-----------------|---------------|
 | **R0** (baseline) | **6.81** | Original draft |
 | **R1** | **8.04** | +1.23 — formatting + visual fixes (figures inlined, citations resolved, terminology unified) |
-| **R2** | **8.66** | +0.62 — content (statistical assumption disclosure, hyperparameter tables, ablation moved to main text) |
-
-For comparison, [Story2Proposal's reported scores](https://arxiv.org/abs/2603.27065):
-- DirectChat single-shot: **3.96**
-- Story2Proposal (mixed backbones): **6.15**
+| **R2** | **8.66** | +0.62 — content (statistical assumption disclosure, hyperparameter tables, ablations moved to main text) |
 
 📊 Full per-dimension breakdown → [examples/dac_paper_case_study.md](examples/dac_paper_case_study.md)
 
@@ -137,43 +134,11 @@ This is the mechanism that prevents structural drift across multi-step revision.
 
 ---
 
-## Comparison to Other Tools
+## Installation Requirements
 
-| Tool | Backend | Output | Multi-agent | Visual Contract | Anchored Rubric |
-|------|---------|--------|--------------|-----------------|-----------------|
-| **Lunheng** (this) | Claude only | Annotated revision + 8-dim scores | ✅ 4 + 8 | ✅ | ✅ NeurIPS/Nature/JACS |
-| Story2Proposal (paper) | Mixed | LaTeX manuscript | ✅ 4 | ✅ | ❌ generic 8 categories |
-| `auto-paper-improvement-loop` | GPT-5.4 via Codex | Revised paper | ❌ single | ❌ | ❌ free-form |
-| AI Scientist v2 | OpenAI | End-to-end paper | ✅ tree search | ❌ | ❌ |
-| PaperOrchestra (Google) | Mixed | Submission-ready | ✅ | ✅ visual contract | ❌ generic |
-
----
-
-## Installation
-
-### Requirements
-- [Claude Code CLI](https://claude.com/claude-code) ≥ 0.5 OR [OpenClaw](https://github.com/openclaw)
+- [Claude Code CLI](https://claude.com/claude-code) ≥ 0.5 OR an equivalent Claude-agent harness
 - A LaTeX distribution (MiKTeX / TeX Live) if you want PDF compilation
 - Optional: `pandoc` if you want to also produce DOCX output
-
-### Setup
-
-```bash
-git clone https://github.com/<your-user>/Lunheng.git
-cd Lunheng
-
-# Install both skills
-mkdir -p ~/.claude/skills
-cp -r skills/lunheng ~/.claude/skills/
-cp -r skills/lunheng-quick ~/.claude/skills/
-```
-
-Verify in Claude Code:
-
-```
-/lunheng paper/        # full multi-agent review
-/lunheng-quick paper/  # quick polish
-```
 
 ---
 
@@ -194,11 +159,11 @@ The framework explicitly refuses to invent experimental data; it only flags miss
 ## Roadmap
 
 - [x] v0.1 — Skill files + 8-dim rubric + visual contract schema
-- [x] v0.2 — Reproducibility checklist (NeurIPS-style)
+- [x] v0.2 — Reproducibility checklist
 - [x] v0.3 — DAC case study public artifact
 - [ ] v0.4 — Venue-specific rubric profiles (`--venue=neurips/nature/jacs`)
 - [ ] v0.5 — JSON schema validation for visual contract
-- [ ] v0.6 — Prometheus integration for review-quality monitoring
+- [ ] v0.6 — Telemetry hooks for review-quality monitoring
 - [ ] v1.0 — Stable API + python wrapper for non-Claude-Code users
 
 ---
@@ -212,20 +177,7 @@ If Lunheng helps your paper, please cite:
   author = {Ding, Yujie},
   title  = {Lunheng: Multi-agent paper review framework anchored to top-tier journal rubrics},
   year   = {2026},
-  url    = {https://github.com/<your-user>/Lunheng},
-  note   = {A Claude-native re-implementation and extension of Story2Proposal (AgentAlpha 2026, arXiv:2603.27065)}
-}
-```
-
-And cite the original Story2Proposal paper this work builds on:
-
-```bibtex
-@article{story2proposal2026,
-  title  = {Story2Proposal: A Scaffold for Structured Scientific Paper Writing},
-  author = {AgentAlpha Team},
-  year   = {2026},
-  eprint = {2603.27065},
-  archivePrefix = {arXiv}
+  url    = {https://github.com/<your-user>/Lunheng}
 }
 ```
 
@@ -234,12 +186,3 @@ And cite the original Story2Proposal paper this work builds on:
 ## License
 
 [MIT](LICENSE) — free to use, modify, and redistribute. No warranty.
-
----
-
-## Acknowledgments
-
-- **AgentAlpha** for the original Story2Proposal framework that this work re-implements
-- **wanshuiyin/ARIS** for the lightweight skill-based architecture pattern
-- **Anthropic** for Claude Code and the Agent tool
-- All readers who reviewed and improved this README
