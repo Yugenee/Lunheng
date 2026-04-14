@@ -6,6 +6,15 @@
 
 This rubric is **aligned with the actual scoring practices of NeurIPS, Nature, and JACS**. Each of the 8 dimensions uses a **1–10 scale with anchored anchors** at four levels (1–3 / 4–6 / 7–8 / 9–10), so different evaluators converge on similar scores.
 
+### Anatomy of each dimension
+
+For every dimension below you will see three blocks:
+
+- **What it measures** — one-line definition of the dimension.
+- **Aligned with** — the venue rubric this anchor inherits from.
+- **Score table (1–10 with anchors)** — explicit description of what each band looks like; evaluators must reference these anchors when assigning a score, not vibes.
+- **Red flags** — specific symptoms that automatically push the score into the 4–6 or lower band. Think of them as "smell tests": if a paper shows any red flag, the dimension cannot exceed 6 unless the evaluator gives a concrete justification for why the symptom does not apply.
+
 ---
 
 ## D1. Soundness 
@@ -203,7 +212,7 @@ score_change_criteria:
 ---
 ---
 
-# 评分标准（中文版）
+# 评分标准
 
 > "权衡论证, 校释虚妄" — 王充《论衡》
 

@@ -52,7 +52,7 @@ How Lunheng's anchored anchors translate to actionable fixes:
 ### D5 Reproducibility went 6.5 → 8.5 because:
 - **R0 anchor 4–6 triggered:** "code 'will be released'; hyperparameters described in prose"
 - **R3 anchor 7–8 reached:** "code+data available, key hyperparams given" (added `tab:hyperparams` with exact values for all 3 models, ensemble weights 0.35/0.30/0.35, full dependency version list)
-- **What's still missing for 9–10:** `<your-user>` in the GitHub URL is a placeholder; once a real repo URL is in, score crosses 9
+- **What's still missing for 9–10:** the GitHub repo URL needs a real Zenodo DOI (registered post-acceptance); a `requirements.txt` with pinned versions; once those land, the score crosses 9
 
 ### D8 Ethics went 5.0 → 9.0 because:
 - **R0 anchor 4–6 triggered:** "brief Limitations paragraph; ethics not discussed"
@@ -109,7 +109,7 @@ A reader can re-run any individual sub-agent with the saved prompt to verify the
 ---
 ---
 
-# 案例研究：DAC 材料 ML 论文 R0 → R3（中文版）
+# 案例研究：DAC 材料 ML 论文 R0 → R3
 
 将论衡应用于一篇中文化学-机器学习论文（目标 Q1 期刊）。
 
@@ -161,7 +161,7 @@ A reader can re-run any individual sub-agent with the saved prompt to verify the
 ### D5 可复现性 6.5 → 8.5 的原因
 - **R0 触发 4-6 锚点**："代码'将公开发布'；超参用文字描述"
 - **R3 达到 7-8 锚点**："code+data 可用、关键超参给出"（加了 `tab:hyperparams` 含三模型完整数值、集成权重 0.35/0.30/0.35、依赖版本列表）
-- **冲 9-10 还差**：GitHub URL 中 `<your-user>` 是占位符，主人创建真实仓库后即可
+- **冲 9-10 还差**：补 Zenodo DOI（论文录用后注册）+ 锁版本的 `requirements.txt`，即可跨 9 分
 
 ### D8 伦理 5.0 → 9.0 的原因
 - **R0 触发 4-6 锚点**："Limitations 简短；未讨论伦理"

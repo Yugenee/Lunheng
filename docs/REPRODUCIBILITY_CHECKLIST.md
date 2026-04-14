@@ -159,7 +159,7 @@ A composite reproducibility score $D_5$ on the [main rubric](EVALUATION_RUBRIC.m
 ---
 ---
 
-# 可复现性清单（中文版）
+# 可复现性清单
 
 改编自 NeurIPS 2025 Paper Checklist，附化学/材料/物理论文扩展。每项打分 **Yes / Partial / No / N/A**。
 

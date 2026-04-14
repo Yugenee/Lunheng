@@ -12,9 +12,9 @@ authors:
     given-names: Yujie
     affiliation: "China University of Petroleum-Beijing at Karamay"
 date-released: 2026-04-14
-version: 0.3.0
+version: 0.4.0
 license: MIT
-repository-code: "https://github.com/<your-user>/Lunheng"
+repository-code: "https://github.com/Yugenee/Lunheng"
 keywords:
   - multi-agent
   - paper review
