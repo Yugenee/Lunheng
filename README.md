@@ -23,7 +23,7 @@ Distinguishing features:
 - **Anchored 1–10 rubric across 8 dimensions**, mapped to actual NeurIPS 2025 / Nature / JACS reviewer practice (not generic categories).
 - **NeurIPS-style 16-item Reproducibility Checklist** with chemistry/materials extensions.
 - **Pure Claude sub-agents** — no third-party API key required.
-- **Public case study** showing R0 → R2 trajectory on a real Q1-target manuscript.
+- **Public case study** showing R0 → R3 trajectory on a real Q1-target manuscript.
 
 ## Why "Lunheng"?
 
@@ -98,9 +98,8 @@ Lunheng was applied to a Chinese-language chemistry-ML manuscript (DAC sorbents 
 
 | Round | Composite Score | What changed |
 |-------|-----------------|---------------|
-| **R0** (baseline) | **6.81** | Original draft |
-| **R1** | **8.04** | +1.23 — formatting + visual fixes (figures inlined, citations resolved, terminology unified) |
-| **R2** | **8.66** | +0.62 — content (statistical assumption disclosure, hyperparameter tables, ablations moved to main text) |
+| **R0** (baseline) | **6.89** | Original draft |
+| **R3** (after gap fixes) | **8.04** | Targeted fixes per Lunheng's per-dimension `score_change_criteria` outputs (bootstrap CIs, hyperparameter table, Data Availability section, Broader Impact, table column-width fixes) |
 
 📊 Full per-dimension breakdown → [examples/dac_paper_case_study.md](examples/dac_paper_case_study.md)
 
@@ -206,7 +205,7 @@ If Lunheng helps your paper, please cite:
 - **8维度 1–10 分锚定评分**，对齐NeurIPS 2025 / Nature / JACS的真实审稿规范
 - **NeurIPS式16项可复现性清单**，含化学/材料学科扩展
 - **纯Claude子代理**，不依赖第三方API
-- **公开真实案例**：完整展示 R0→R2 在Q1论文上的轨迹
+- **公开真实案例**：完整展示 R0→R3 在Q1论文上的轨迹
 
 ## 为什么叫"论衡"
 
@@ -257,9 +256,8 @@ cp -r skills/lunheng-quick ~/.claude/skills/
 
 | 轮次 | 综合分 | 关键变化 |
 |------|--------|---------|
-| **R0**（基线） | **6.81** | 原始草稿 |
-| **R1** | **8.04** | +1.23 — 修排版+视觉 |
-| **R2** | **8.66** | +0.62 — 修内容（统计假设、超参表、消融搬入正文） |
+| **R0**（基线） | **6.89** | 原始草稿 |
+| **R3**（修补缺口后） | **8.04** | 按论衡 per-dimension `score_change_criteria` 针对性修复（bootstrap CI、超参表、数据可用性、Broader Impact、表格列宽） |
 
 ## 视觉契约（核心机制）
 
