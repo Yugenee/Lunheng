@@ -36,11 +36,6 @@ The skills under [`skills/`](skills/) are markdown-only by design. Improvements 
 
 → PR to the relevant `SKILL.md`. Include before/after composite scores on a test paper if possible.
 
-### 🌍 Translations
-Right now we have English (`README.md`) and Chinese (`README_CN.md`). I'd welcome:
-- Other major languages (Japanese, Korean, Spanish, French, German)
-- Translation of `docs/EVALUATION_RUBRIC.md` so non-English authors can use it directly
-
 ## What I'd Rather Not Merge
 
 - **Adding non-Claude backends** as the primary path. The point of Lunheng is to be Claude-native; if you want a multi-backend version, please fork.
@@ -60,8 +55,7 @@ Standard: be kind, be specific, prefer concrete examples over abstract criticism
 
 ## Author
 
-Yujie Ding · 中国石油大学（北京）克拉玛依校区
-
+Yujie 
 ---
 ---
 
@@ -103,11 +97,6 @@ Yujie Ding · 中国石油大学（北京）克拉玛依校区
 
 → 提 PR 至相应 `SKILL.md`。如可能附测试论文的前后综合分对照。
 
-### 🌍 翻译
-目前有英文（`README.md`）和中文。欢迎其他主要语言：
-- 日语、韩语、西班牙语、法语、德语
-- `docs/EVALUATION_RUBRIC.md` 的多语翻译
-
 ## 不接受的贡献
 
 - **将主路径改为非 Claude 后端**。论衡的核心定位是 Claude 原生；如想做多后端版本，请 fork。
@@ -127,5 +116,5 @@ Yujie Ding · 中国石油大学（北京）克拉玛依校区
 
 ## 作者
 
-Yujie Ding · 中国石油大学（北京）克拉玛依校区
+Yujie 
 

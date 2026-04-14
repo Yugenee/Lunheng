@@ -8,7 +8,7 @@ This rubric is **aligned with the actual scoring practices of NeurIPS, Nature, a
 
 ---
 
-## D1. Soundness — 方法严谨性
+## D1. Soundness 
 
 **What it measures:** Technical correctness, claim–evidence alignment, statistical reporting, mathematical rigor.
 
@@ -25,8 +25,7 @@ This rubric is **aligned with the actual scoring practices of NeurIPS, Nature, a
 
 ---
 
-## D2. Significance & Originality — 重要性与原创性
-
+## D2. Significance & Originality 
 **What it measures:** Advance over state-of-the-art, conceptual novelty, impact on field.
 
 **Aligned with:** NeurIPS *Significance + Originality* (each 1–4), Nature *Advance*, JACS *Conceptual Novelty*.
@@ -42,7 +41,7 @@ This rubric is **aligned with the actual scoring practices of NeurIPS, Nature, a
 
 ---
 
-## D3. Clarity & Organization — 清晰度与组织
+## D3. Clarity & Organization 
 
 **What it measures:** Writing flow, logical structure, paragraph cohesion, terminology consistency.
 
@@ -59,7 +58,7 @@ This rubric is **aligned with the actual scoring practices of NeurIPS, Nature, a
 
 ---
 
-## D4. Experimental Substance — 实验充分性
+## D4. Experimental Substance
 
 **What it measures:** Adequacy of experiments, baselines, ablations, sample sizes, error reporting.
 
@@ -76,7 +75,7 @@ This rubric is **aligned with the actual scoring practices of NeurIPS, Nature, a
 
 ---
 
-## D5. Reproducibility — 可复现性
+## D5. Reproducibility 
 
 **What it measures:** Whether an independent researcher can reproduce the results from the paper alone.
 
@@ -92,8 +91,7 @@ Use the [Reproducibility Checklist](REPRODUCIBILITY_CHECKLIST.md) (16 items adap
 
 ---
 
-## D6. Citation Quality — 引用质量
-
+## D6. Citation Quality 
 **What it measures:** Coverage of related work, tool/method citations, classical references, balance.
 
 **Aligned with:** JACS *Literature Citations Appropriateness*, Nature *Contextualization*.
@@ -109,7 +107,7 @@ Use the [Reproducibility Checklist](REPRODUCIBILITY_CHECKLIST.md) (16 items adap
 
 ---
 
-## D7. Visual & Tabular Communication — 图表沟通
+## D7. Visual & Tabular Communication 
 
 **What it measures:** Figure quality, caption self-containedness, table formatting, layout, figure–text alignment.
 
@@ -126,7 +124,7 @@ Use the [Reproducibility Checklist](REPRODUCIBILITY_CHECKLIST.md) (16 items adap
 
 ---
 
-## D8. Ethics, Limitations & Broader Impact — 伦理/局限/影响
+## D8. Ethics, Limitations & Broader Impact 
 
 **What it measures:** Transparency about limitations, ethical considerations, societal impact.
 
