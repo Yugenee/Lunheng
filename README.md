@@ -35,10 +35,19 @@ The name comes from *Lunheng* (《论衡》), Wang Chong's ~80 CE treatise — t
 
 ### Install as a Claude Code / OpenClaw skill
 
-```bash
-git clone https://github.com/<your-user>/Lunheng.git
-cd Lunheng
+**One-liner (any platform):**
 
+```bash
+git clone https://github.com/<your-user>/Lunheng.git && cd Lunheng && python install.py
+```
+
+The installer copies both `lunheng` and `lunheng-quick` skills to `~/.claude/skills/`. Run `python install.py --uninstall` to remove.
+
+**Windows users** can also double-click `install.bat`. **macOS / Linux** users: `bash install.sh`.
+
+**Manual install** (if you don't trust the script):
+
+```bash
 mkdir -p ~/.claude/skills
 cp -r skills/lunheng ~/.claude/skills/
 cp -r skills/lunheng-quick ~/.claude/skills/
@@ -213,13 +222,15 @@ If Lunheng helps your paper, please cite:
 
 ## 快速开始
 
+**一行安装（跨平台）**：
+
 ```bash
-git clone https://github.com/<your-user>/Lunheng.git
-cd Lunheng
-mkdir -p ~/.claude/skills
-cp -r skills/lunheng ~/.claude/skills/
-cp -r skills/lunheng-quick ~/.claude/skills/
+git clone https://github.com/<your-user>/Lunheng.git && cd Lunheng && python install.py
 ```
+
+安装脚本会把 `lunheng` 和 `lunheng-quick` 两个skill复制到 `~/.claude/skills/`。卸载用 `python install.py --uninstall`。
+
+Windows用户也可以双击 `install.bat`；macOS/Linux 用 `bash install.sh`。
 
 在Claude Code中调用：
 
