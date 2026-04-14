@@ -332,7 +332,7 @@ If Lunheng helps your paper, please cite:
 ---
 ---
 
-# 论衡 (中文版)
+# Lunheng (论衡) — 中文版
 
 > **多智能体学术论文审阅框架，对齐顶刊审稿标准。**
 >
