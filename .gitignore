@@ -1,0 +1,38 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.env
+
+# LaTeX intermediates (in examples)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+
+# Lunheng workspace artifacts (created during runs)
+lunheng_workspace/
+lunheng_quick_workspace/
+LUNHENG_LOG.md
+LUNHENG_QUICK_LOG.md
+
+# Local-only Claude config
+.claude/local/

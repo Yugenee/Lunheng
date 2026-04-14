@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lunheng Visual Contract",
+  "description": "Persistent contract carried between Lunheng sub-agents to enforce structural and visual consistency.",
+
+  "global_visual_registry": [
+    {
+      "label": "fig:workflow",
+      "type": "figure",
+      "file": "figures/Fig1_workflow.png",
+      "semantic_description": "End-to-end pipeline: data → features → model → analysis",
+      "expected_section": "data_methods",
+      "actual_references": []
+    },
+    {
+      "label": "tab:performance",
+      "type": "table",
+      "semantic_description": "Cross-validation performance of the ensemble model under three CV strategies",
+      "expected_section": "results",
+      "actual_references": []
+    }
+  ],
+
+  "section_obligations": {
+    "intro": [],
+    "data_methods": ["fig:workflow"],
+    "results": ["tab:performance"],
+    "interpretability": [],
+    "discussion": []
+  },
+
+  "terminology_glossary": {
+    "辅助域": "→ broad-domain CO2 isotherm data / 广域CO2等温线数据",
+    "GroupKFold": "use 'GroupKFold' in body, 'GKF' allowed only in tables/figures",
+    "ρ": "first occurrence: 'Spearman rank correlation coefficient ρ'"
+  },
+
+  "validation_rules": {
+    "unique_labels": true,
+    "all_visuals_referenced": true,
+    "all_references_resolved": true,
+    "caption_text_alignment_min_score": 7
+  }
+}
