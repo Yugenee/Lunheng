@@ -352,9 +352,33 @@ score_change_criteria:
 | **2** | 可能有理解漏洞；愿意辩护 |
 | **1** | 凭直觉；非主要专长 |
 
+### D9 Narrative Flow & Conciseness (v2.0 新增)
+
+对齐 venue-specific 字数预算, 惩罚冗长和 FAQ 式片段化。
+
+| 分数 | 锚点 |
+|------|------|
+| **10** | 字数 ≤ venue 预算 100%; `\paragraph` 小标题数 ≤ 推荐值; 删任何一处都会伤 claim |
+| **8-9** | 字数 ≤ 110% 预算; `\paragraph` ≤ 1.5× 推荐; 可轻微精简 |
+| **7** | 字数 ≤ 125% 预算 OR 1-2 处多余 `\paragraph` 造成微弱叙事断裂 |
+| **5-6** | 字数 ≤ 150% 预算 OR 读起来像 FAQ / 规格说明而非论文散文 |
+| **3-4** | 字数 > 150% 预算 OR 超过 5 个多余小标题打断章节流畅度 |
+| **1-2** | 字数 ≥ 2× 预算或无法作为单一叙事论文阅读 |
+
+**venue 预算表**:
+
+| venue | 正文 | 摘要 | `\paragraph` 上限 |
+|-------|-----:|-----:|:----:|
+| `journal` (JMC A / CEJ / JACS / Digital Discovery) | 8-10k CN 字 | 200-350 字 | ≤ 3 |
+| `nature_sub` (Nat Comm / Nat Comp Sci) | 2.5-3.5k | ≤ 250 英文 words | 0 |
+| `conference` (NeurIPS / ICML) | 6-8k 英文 words | 150-200 words | ≤ 2 |
+| `thesis` (本科 / 硕士毕业) | 15-30k | 400-800 | 允许 |
+
+**D9 stop-gate**: 字数超预算 > 25% 时即使 R ≥ 7.0 也不停, 强制触发 Chief Editor 压缩。
+
 ### 综合分
 
-$$ R = \frac{1}{8} \sum_{k=1}^{8} D_k $$
+$$ R = \frac{1}{9} \sum_{k=1}^{9} D_k \quad\text{(v2.0: 9 维度)} $$
 
-范围 1.0 – 10.0。$R \geq 7.0$ 或 `iteration >= MAX_ITERATIONS` 时停止迭代。
+范围 1.0 – 10.0。**v2.0 stop criterion**: $R \geq 7.0$ **且** 字数 ≤ venue 预算 × 1.10 才停止迭代。单纯 R 达标但字数超标 → 跳过 Writer, 只跑 Chief Editor 压缩。
 

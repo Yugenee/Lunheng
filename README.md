@@ -16,14 +16,28 @@
 
 ## What is Lunheng?
 
-Lunheng is a **multi-agent paper review and improvement framework** that turns Claude into a coordinated review committee. Four specialist agents (Architect, Writer, Refiner, Evaluator-bench) collaborate around a **persistent visual contract** — a shared JSON state that tracks figures, tables, terminology, and cross-references throughout the revision loop.
+Lunheng is a **multi-agent paper review and improvement framework** that turns Claude into a coordinated review committee. **Six specialist agents** (Architect, Evaluator-9, Writer, Refiner, **Chief Editor**, Aggregator) collaborate around a **persistent visual contract** AND a **word-budget contract** — shared JSON state that tracks figures, tables, terminology, cross-references, AND venue-appropriate length throughout the revision loop.
 
 Distinguishing features:
 
-- **Anchored 1–10 rubric across 8 dimensions**, mapped to actual NeurIPS 2025 / Nature / JACS reviewer practice (not generic categories).
+- **Anchored 1–10 rubric across 9 dimensions** (8 original + **D9 Narrative & Conciseness**), mapped to actual NeurIPS 2025 / Nature / JACS reviewer practice (not generic categories).
+- **Venue-aware word budgeting** — `journal` / `thesis` / `nature_sub` / `conference` profiles with enforced per-section char limits.
+- **Chief Editor role** (v2.0) — enforces budget and narrative flow; can override Writer additions; prevents the "answer-every-reviewer-in-text" anti-pattern.
+- **Every Evaluator proposes `cuts` paired with `fixes`** (v2.0) — no net additions without offsetting deletions.
 - **NeurIPS-style 16-item Reproducibility Checklist** with chemistry/materials extensions.
 - **Pure Claude sub-agents** — no third-party API key required.
 - **Public case study** showing R0 → R3 trajectory on a real Q1-target manuscript.
+
+### What's new in v2.0 (2026-04-14)
+
+v1.0 produced technically polished but **overstuffed** papers — reviewers rewarded additions (expand Limitations to 6 items, add `\paragraph{Protocol}` for every method detail, pad Broader Impact to 1000+ chars). The composite score climbed, but the paper read like an FAQ rather than a coherent narrative. v2.0 fixes this with four structural changes:
+
+1. **Required `venue` parameter** with hard word budgets (`journal` = 8-10k CN chars / 6-8k EN words; `nature_sub` = 2.5-3.5k; `thesis` = 15-30k)
+2. **D9 Narrative & Conciseness** as the 9th evaluation dimension — penalizes overshoot, excess `\paragraph` small-headings, FAQ-style fragmentation
+3. **Chief Editor role** inserted after Refiner — authority to override Writer; compresses to budget; moves method details to SI
+4. **Mandatory `cuts` field** in every Evaluator YAML — each fix must be paired with a comparable-size cut unless the paper is under budget
+
+See `skills/lunheng/SKILL.md` for full v2.0 workflow and anti-pattern catalogue.
 
 ## Why "Lunheng"?
 
@@ -198,7 +212,7 @@ This lets you iterate: get a review, manually apply some of the suggestions, the
 
 ## Evaluation Rubric
 
-8 dimensions, each scored **1–10** with **anchored anchors** at four levels (1–3 / 4–6 / 7–8 / 9–10), plus an Overall verdict (1–6) and Confidence (1–5).
+**9 dimensions** (v2.0 adds D9 Narrative & Conciseness), each scored **1–10** with **anchored anchors** at four levels (1–3 / 4–6 / 7–8 / 9–10), plus an Overall verdict (1–6) and Confidence (1–5).
 
 | Dimension | Aligned with |
 |-----------|--------------|
@@ -345,7 +359,9 @@ If Lunheng helps your paper, please cite:
 论衡是一个**契约约束的多智能体论文评审与改进框架**，把Claude变成一个协同工作的评审委员会。四类专业智能体（架构师 / 撰写者 / 润色者 / 评估者团）协同作业，共享一份**持久化视觉契约**——一个JSON状态记录所有图表、术语和交叉引用，在整个改稿循环中保持一致。
 
 **特色**：
-- **8维度 1–10 分锚定评分**，对齐NeurIPS 2025 / Nature / JACS的真实审稿规范
+- **9维度 1–10 分锚定评分** (v2.0 新增 D9 叙事与精炼)，对齐NeurIPS 2025 / Nature / JACS 的真实审稿规范
+- **Venue 感知字数预算** (v2.0): `journal` / `thesis` / `nature_sub` / `conference` 四种预设，按目标场景强约束总字数与小节字数
+- **Chief Editor 角色** (v2.0): 在 Refiner 之后强制压到字数预算，防止 "每个审稿点都在正文里答复" 的反模式
 - **NeurIPS式16项可复现性清单**，含化学/材料学科扩展
 - **纯Claude子代理**，不依赖第三方API
 - **公开真实案例**：完整展示 R0→R3 在Q1论文上的轨迹
