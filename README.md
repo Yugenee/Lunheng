@@ -39,6 +39,28 @@ v1.0 produced technically polished but **overstuffed** papers — reviewers rewa
 
 See `skills/lunheng/SKILL.md` for full v2.0 workflow and anti-pattern catalogue.
 
+### What's new in v2.1 (2026-04-17)
+
+v2.0 shipped a robust budget/narrative framework, but a real-paper audit (a DAC-ML manuscript targeting a Q1 journal) uncovered **17 "placeholder" errors** where Writer agents had emitted specific numbers — subset sizes, enrichment factors, equations, units — that were **never verified against source data**. Representative cases:
+
+- `B subset (n=2142)` — an experiment that was never run; the number came from `3555 × 60%` as a Writer shortcut for "the literature-only subset"
+- `C subset (n=3591)` — a stray number from an early draft; the actual dataset had 3555 rows
+- `Amine EF = 1.57` — Writer's pen-and-paper arithmetic (`50.4% / 32.1%`) while the real OOF value was `1.33`
+- `CC backfill covers ~38%` — actual coverage was 2.6% (91 / 3555 rows)
+- SI's Clausius–Clapeyron form written as equi-loading `ln P vs 1/T` when the code actually used van't Hoff equi-pressure `ln(q₁/q₂) vs 1/T`
+- `N content (wt%)` in the main-text feature table, when the CSV column and SI both say `mmol/g`
+
+v2.1 adds **numerical grounding** as a Writer hard constraint (HARD CONSTRAINT §8):
+
+1. For **every** specific number / count / percentage / ratio, Writer must cite its source file path (e.g., `data/xxx.csv` row count, `output/yyy.json` field, computed from `zzz.npz`).
+2. If the source is inaccessible → use qualitative language ("majority", "small fraction") OR tag `[VERIFY: <description>]` for Refiner / Chief Editor to resolve.
+3. **Forbidden**: fabricating a specific count by multiplying total × rounded percentage (e.g., `3555 × 60% → 2142` presented in prose as if from a real experiment).
+4. Writer output block must include a traceability section listing each number's source file.
+
+This is a Writer-level patch — no workflow changes, no new agents, no new dimensions. v2.0 pipelines keep working; v2.1 just catches a category of fake-specific numbers that v1.0–v2.0 Writers had been generating without guard-rails.
+
+See `skills/lunheng/SKILL.md` Writer HARD CONSTRAINTS §8 and Anti-patterns #6 for the exact prompt language.
+
 ## Why "Lunheng"?
 
 The name comes from *Lunheng* (《论衡》), Wang Chong's ~80 CE treatise — the first systematic Chinese work on weighing evidence and refuting unsupported claims. Lunheng's job is the same: weigh every claim against the evidence the paper provides, and surface what is unsupported.
@@ -362,9 +384,23 @@ If Lunheng helps your paper, please cite:
 - **9维度 1–10 分锚定评分** (v2.0 新增 D9 叙事与精炼)，对齐NeurIPS 2025 / Nature / JACS 的真实审稿规范
 - **Venue 感知字数预算** (v2.0): `journal` / `thesis` / `nature_sub` / `conference` 四种预设，按目标场景强约束总字数与小节字数
 - **Chief Editor 角色** (v2.0): 在 Refiner 之后强制压到字数预算，防止 "每个审稿点都在正文里答复" 的反模式
+- **数字真值约束** (v2.1): Writer 产出的每个数字/计数/百分比必须引用源文件路径，或用 `[VERIFY: ...]` 标签交给 Refiner 兜底；禁止 `总数 × 四舍五入百分比` 凑具体数
 - **NeurIPS式16项可复现性清单**，含化学/材料学科扩展
 - **纯Claude子代理**，不依赖第三方API
 - **公开真实案例**：完整展示 R0→R3 在Q1论文上的轨迹
+
+### v2.1 新增 (2026-04-17)
+
+v2.0 的字数/叙事框架稳定跑了一段时间后，在一次真实论文审计 (DAC-ML 稿件) 中发现 **17 处 Writer 占位符错误**: Writer 为了让段落看起来"具体"，凭 `总数 × 四舍五入百分比` 造出 (1) 从未真正跑过的子集 `n=2142`、(2) 心算推出的 `EF=1.57`（真实 1.33）、(3) 与代码不符的 CC 方程形式、(4) 写错单位 (N 含量 `wt%` vs 实际 `mmol/g`) 等"看似具体但实际未核对"的数字。
+
+v2.1 为 Writer 加一条硬约束:
+
+1. 每个数字、计数、百分比、比率必须引用源文件路径 (`data/*.csv`, `output/*.json`, `*.npz`)
+2. 无法访问源文件 → 用定性语言 ("多数"/"少数") 或 `[VERIFY: ...]` 标签交给 Refiner 兜底
+3. 禁止 `总数 × 四舍五入百分比 → 具体 N` 的心算造假
+4. Writer 输出块必须列每个数字的来源文件路径
+
+这是 Writer 级别的 patch，不改变工作流或智能体数量。详见 `skills/lunheng/SKILL.md` Writer HARD CONSTRAINTS §8。
 
 ## 为什么叫"论衡"
 

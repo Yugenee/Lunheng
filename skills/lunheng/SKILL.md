@@ -1,6 +1,6 @@
 ---
 name: lunheng
-description: "Lunheng (论衡) v2.0 — Venue-aware multi-agent paper review framework with Chief Editor role and Narrative dimension. 6 roles (Architect, Evaluator-9, Writer, Refiner, Chief Editor, Aggregator) coordinate around a persistent visual contract AND a word budget contract. Use when user says \"lunheng\", \"论衡\", \"严格评审\", \"top journal review\", \"multi-agent review\", or wants a comprehensive paper assessment with anchored scoring. Requires venue parameter."
+description: "Lunheng (论衡) v2.1 — Venue-aware, numerically-grounded multi-agent paper review framework with Chief Editor role and Narrative dimension. 6 roles (Architect, Evaluator-9, Writer, Refiner, Chief Editor, Aggregator) coordinate around a persistent visual contract AND a word budget contract. Use when user says \"lunheng\", \"论衡\", \"严格评审\", \"top journal review\", \"multi-agent review\", or wants a comprehensive paper assessment with anchored scoring. Requires venue parameter."
 argument-hint: [paper-directory] venue:<journal|thesis|nature_sub|conference>
 allowed-tools: Bash(*), Read, Write, Edit, Grep, Glob, Agent
 ---
@@ -205,6 +205,7 @@ HARD CONSTRAINTS (v2.0):
 5. Prefer connected paragraphs over enumerate/itemize for lists ≤ 4 items.
 6. Reference every visual in section_obligations; 1-2 sentences of context per \ref.
 7. Use exactly the terms from terminology_glossary.
+8. **[NEW v2.1] Numerical grounding (anti-placeholder)**: For every specific number, count, percentage, or ratio you emit, you MUST cite its source file path (e.g., `data/xxx.csv` row count, `output/yyy.json` field, computed from `zzz.npz`). If the source is inaccessible, either (a) use qualitative language ("majority", "small fraction") or (b) flag as `[VERIFY: <description>]` for Refiner/Chief Editor to resolve. **NEVER fabricate a specific count by multiplying total × rounded percentage** (e.g., `3555 × 60% = 2142` as a subset size) — doing so creates fake-specific numbers that imply experiments never actually run.
 
 Produce:
 - Revised LaTeX wrapped in <SECTION_OUTPUT>...</SECTION_OUTPUT>
@@ -284,6 +285,7 @@ Report:
 - **[NEW v2.0] Every `fix` must be paired with a `cut` of comparable size** unless the paper is currently under budget. No net additions above budget slack.
 - **[NEW v2.0] `\paragraph{}` is opt-in per section** — default is banned for journal/nature_sub/conference venues.
 - **[NEW v2.0] Writer cannot override Chief Editor** — order of authority: Architect > Chief Editor > Refiner > Writer.
+- **[NEW v2.1] Writer must ground every number in a source file** — no percentage-derived fake counts (e.g., `total × rounded_pct → N` in prose), no numbers pulled from memory without citing source. Any unverifiable number must be flagged `[VERIFY: ...]` for Refiner/Chief Editor resolution. Applies to counts, percentages, R²/ρ/MAE, EF, OOF metrics, etc.
 
 ## Override Examples
 
@@ -306,3 +308,4 @@ Report:
 3. **"Add \paragraph{协议} for every method detail"** → v2.0 bans \paragraph by default
 4. **"Broader Impact 1000+ chars to defend against Ethics reviewer"** → v2.0 hard-caps via budget
 5. **"Every fix adds 300 words, no fix ever subtracts"** → v2.0 requires paired cuts
+6. **[NEW v2.1] "Percentage × total → fake-specific N in prose"** (e.g., writing "the literature-only subset (n=2142)" when no such experiment was ever run, derived from a rounded `3555 × 60%`) → v2.1 forces Writer to ground each number in a source file or tag `[VERIFY: ...]`. Motivation: Paper1 audit (2026-04-17) cleared 17 such placeholders — B subset n=2142, C subset n=3591, EF=1.57, occupancy 50.4%/32.1%, CC backfill 38%, SI CC equation form, N content unit, MAE 0.37, etc. — all from Writer's rounded-percentage arithmetic that never touched source data.
