@@ -4,7 +4,7 @@
 >
 > Weighing arguments, examining what is false — *Lunheng*, Wang Chong (~80 CE)
 
-This rubric is **aligned with the actual scoring practices of NeurIPS, Nature, and JACS**. Each of the 8 dimensions uses a **1–10 scale with anchored anchors** at four levels (1–3 / 4–6 / 7–8 / 9–10), so different evaluators converge on similar scores.
+This rubric is **aligned with the actual scoring practices of NeurIPS, Nature, and JACS**. Each of the 9 dimensions (D1–D9, D9 added in v2.0) uses a **1–10 scale with anchored anchors** at four levels (1–3 / 4–6 / 7–8 / 9–10), so different evaluators converge on similar scores.
 
 ### Anatomy of each dimension
 
@@ -31,6 +31,24 @@ For every dimension below you will see three blocks:
 | **1–3** | Major logical gaps; fabricated results; mathematical errors; unsupported sweeping claims. |
 
 **Red flags:** $p < 0.05$ without correction for multiple testing; ad-hoc statistical methods; claims of "significantly better" without test reported.
+
+**Overclaim trigger-word checklist (v2.2):** the following words, when used in main text without an explicit scope/evidence footnote within 2 sentences, automatically deduct 1 point from D1.
+
+| Trigger | Safer replacement |
+|---|---|
+| `prove` / `proves` / `proven` | `show` / `demonstrate` |
+| `conclusively` | `consistently` / (delete) |
+| `unprecedented` | `among the strongest reported` |
+| `best` / `superior` (unqualified) | `best in this benchmark` / `among the top` |
+| `first` (unqualified) | `to our knowledge, the first` |
+| `definitely` / `obviously` / `clearly` | (delete) |
+| `significantly better` (no test reported) | report the test + p-value, OR use `outperforms` |
+
+**Hedging calibration ladder.** Match verb strength to evidence strength. Flag any sentence whose verb sits one rung above what the evidence supports.
+
+```
+demonstrate (strong) ← suggest (moderate) ← may reflect (weak) ← is consistent with (very weak)
+```
 
 ---
 
@@ -64,6 +82,16 @@ For every dimension below you will see three blocks:
 | **1–3** | Confusing structure; rampant translation-style language; key results buried; jargon without explanation. |
 
 **Red flags:** Same concept named 3 different ways; tables/figures referenced before context; "first/second/third" lists where prose is needed.
+
+**Section-syntax drift anchors (v2.2):**
+
+| Drift | Penalty |
+|---|---|
+| Results paragraph uses Discussion-style hedging (`may`, `suggests`, `could indicate`, `is likely due to`) | -1 on D3 |
+| Discussion paragraph is pure past-tense result restatement with no `may` / `suggest` / `consistent with` / `bounded by` | -1 on D3 |
+| Methods uses vague stand-ins (`under standard conditions`, `routine methods`, `analyzed statistically`, `the method was validated`) | -1 on D3 **and** -1 on D5 |
+
+**Paragraph-final sentence check (v2.2):** the last sentence of each paragraph is the most likely to bloat or drift. It should close the controlling idea, not stuff a tangential detail or new noun phrase. If the final sentence is `> 35 words` **and** introduces a noun phrase absent from the topic sentence, deduct 1 from D3 and tag for split.
 
 ---
 
@@ -150,9 +178,39 @@ Use the [Reproducibility Checklist](REPRODUCIBILITY_CHECKLIST.md) (16 items adap
 
 ---
 
+## D9. Narrative Flow & Conciseness [v2.0]
+
+**What it measures:** Whether the paper respects the venue word budget and reads as a single connected narrative rather than a fragmented FAQ or spec sheet.
+
+**Aligned with:** venue-specific length limits (Nature article, NeurIPS page limit, JACS communication limit, thesis chapter budget).
+
+| Score | Anchor |
+|-------|--------|
+| **10** | Within 100% of venue budget; `\paragraph` count ≤ recommended; every cut would damage a claim. |
+| **8–9** | Within 110% of budget; `\paragraph` count ≤ 1.5× recommended; minor tightening still possible. |
+| **7** | Within 125% of budget OR 1–2 excess `\paragraph` blocks cause minor narrative fragmentation. |
+| **5–6** | Within 150% of budget OR reads as FAQ / spec sheet rather than continuous prose. |
+| **3–4** | > 150% of budget OR section flow broken by > 5 excess small-headings. |
+| **1–2** | ≥ 2× budget or unreadable as a single-narrative paper. |
+
+**Venue budget table:**
+
+| venue | Main text | Abstract | `\paragraph` cap |
+|-------|----------:|---------:|:----:|
+| `journal` (JMC A / CEJ / JACS / Digital Discovery) | 8–10k CN chars | 200–350 chars | ≤ 3 |
+| `nature_sub` (Nat Comm / Nat Comp Sci) | 2.5–3.5k | ≤ 250 EN words | 0 |
+| `conference` (NeurIPS / ICML) | 6–8k EN words | 150–200 words | ≤ 2 |
+| `thesis` (本科 / 硕士毕业) | 15–30k | 400–800 | allowed |
+
+**Red flags:** Limitations expanded to 6 enumerate items to chase a D8 high band; `\paragraph{协议}` for every method micro-detail; Broader Impact > 1000 chars to defend against an Ethics reviewer.
+
+**Stop-gate:** if word count is > 125% of venue budget, **R ≥ 7.0 alone does not stop iteration** — Chief Editor compression is forced.
+
+---
+
 ## Holistic Scores
 
-In addition to the 8 dimensions, evaluators provide:
+In addition to the 9 dimensions, evaluators provide:
 
 ### Overall Score (1–6, NeurIPS-style)
 
@@ -177,9 +235,9 @@ In addition to the 8 dimensions, evaluators provide:
 
 ### Composite Score
 
-$$ R = \frac{1}{8} \sum_{k=1}^{8} D_k $$
+$$ R = \frac{1}{9} \sum_{k=1}^{9} D_k \quad\text{(v2.0: 9 dimensions, includes D9 Narrative)} $$
 
-Range: 1.0 – 10.0. Stop iteration when $R \geq 7.0$ OR `iteration >= MAX_ITERATIONS`.
+Range: 1.0 – 10.0. **v2.0 stop criterion:** stop iteration when $R \geq 7.0$ **AND** word count $\leq$ venue budget $\times 1.10$, OR `iteration >= MAX_ITERATIONS`. R alone passing while word count > 125% budget triggers Chief Editor compression instead of stopping.
 
 ---
 
@@ -232,6 +290,24 @@ score_change_criteria:
 
 **红旗：** 多重比较 $p < 0.05$ 但无校正；临时统计方法；声称"显著优于"但未报告检验。
 
+**Overclaim 触发词清单 (v2.2)：** 以下词在正文中出现且 2 句内无显式 scope/证据脚注时，自动 D1 -1。
+
+| 触发词 | 安全替代 |
+|---|---|
+| `prove` / `proves` / `proven` / `证明` | `show` / `demonstrate` / `表明` |
+| `conclusively` / `决定性地` | `consistently` / 删除 |
+| `unprecedented` / `史无前例` | `among the strongest reported` / `迄今最强之一` |
+| `best` / `superior` / `最佳`（无限定） | 加 cohort：`best in this benchmark` / `本基准内最佳` |
+| `first` / `首次`（无限定） | `to our knowledge, the first` / `据我们所知首次` |
+| `definitely` / `obviously` / `clearly` / `显然` | 删除——让证据自证 |
+| `significantly better` / `显著优于`（未报告检验） | 报告检验+p 值，或用 `outperforms` / `优于` |
+
+**Hedging 校准阶梯：** 动词强度必须匹配证据强度。任何句子的动词高出证据一档 → 标红。
+
+```
+demonstrate (强) ← suggest (中) ← may reflect (弱) ← is consistent with (很弱)
+```
+
 ## D2. 重要性与原创性
 
 **测什么：** 相对 SOTA 的进步、概念新颖性、对领域影响。
@@ -259,6 +335,16 @@ score_change_criteria:
 | **1–3** | 结构混乱；翻译腔遍布；关键结果埋没；术语未解释 |
 
 **红旗：** 同概念三种叫法；图表先于上下文出现；该用散文却用"首先/其次/最后"。
+
+**章节句法漂移 anchors (v2.2)：**
+
+| 漂移类型 | 扣分 |
+|---|---|
+| Results 段使用 Discussion 风格 hedging（`may` / `suggests` / `could indicate` / `is likely due to` / `可能反映` / `推测` ） | D3 -1 |
+| Discussion 段全是过去时结果罗列，缺 `may` / `suggest` / `consistent with` / `bounded by` / `可能` / `提示` / `受限于` | D3 -1 |
+| Methods 用模糊套话（`under standard conditions` / `routine methods` / `analyzed statistically` / `the method was validated` / `常规方法` / `统计分析` / `方法已验证`） | D3 -1 **且** D5 -1 |
+
+**段尾句检查 (v2.2)：** 每段最后一句最容易膨胀或漂移。它应该收束 controlling idea，不该塞旁支细节或新名词短语。若段尾句 `> 35 词` **且** 引入主题句中没有的新名词短语 → D3 -1，标记需拆分。
 
 ## D4. 实验充分性
 

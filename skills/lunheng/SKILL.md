@@ -1,13 +1,17 @@
 ---
 name: lunheng
-description: "Lunheng (论衡) v2.1 — Venue-aware, numerically-grounded multi-agent paper review framework with Chief Editor role and Narrative dimension. 6 roles (Architect, Evaluator-9, Writer, Refiner, Chief Editor, Aggregator) coordinate around a persistent visual contract AND a word budget contract. Use when user says \"lunheng\", \"论衡\", \"严格评审\", \"top journal review\", \"multi-agent review\", or wants a comprehensive paper assessment with anchored scoring. Requires venue parameter."
+description: "Lunheng (论衡) v2.2 — Venue-aware, numerically-grounded multi-agent paper review framework with Chief Editor role, Narrative dimension, and overclaim/section-drift anchors. 6 roles (Architect, Evaluator-9, Writer, Refiner, Chief Editor, Aggregator) coordinate around a persistent visual contract AND a word budget contract. Use when user says \"lunheng\", \"论衡\", \"严格评审\", \"top journal review\", \"multi-agent review\", or wants a comprehensive paper assessment with anchored scoring. Requires venue parameter."
 argument-hint: [paper-directory] venue:<journal|thesis|nature_sub|conference>
 allowed-tools: Bash(*), Read, Write, Edit, Grep, Glob, Agent
 ---
 
-# Lunheng — Multi-Agent Paper Review (论衡) v2.0
+# Lunheng — Multi-Agent Paper Review (论衡) v2.2
 
 > "权衡论证, 校释虚妄" — 王充《论衡》(~80 CE)
+>
+> **v2.2 change log (2026-05-03)**: D1 adds an overclaim trigger-word red flag list (grep-able). D3 adds two anchors: Results/Discussion section-syntax drift, and weak paragraph-final sentences. Anchors derived from Nature s41586 (2026) close-reading practice. Net additions kept under 30 lines to respect the v2.0 "no net growth" contract.
+>
+> **v2.1 change log (2026-04-17)**: Numerical grounding constraint for Writer (no percentage-derived fake counts; flag `[VERIFY: ...]` for unverifiable numbers).
 >
 > **v2.0 change log (2026-04-14)**: Added `venue` parameter + word-budget contract + D9 Narrative dimension + Chief Editor role + `cuts` field. v1.0 produced overstuffed papers (14500 chars, 16 `\paragraph` small-headings, fragmented FAQ-style narrative) because all 8 dimensions rewarded additions without a counter-force. v2.0 adds a **budget-enforcing Chief Editor** after Refiner and mandates **every Evaluator propose cuts alongside fixes**.
 
@@ -75,6 +79,45 @@ If R passes but budget fails → skip Writer/Evaluator, run **Chief Editor only*
 Add these D3 anchors to the existing rubric:
 - -2 on D3 if sub-section introduces redundancy already covered in prior section
 - -1 on D3 if `\paragraph{}` title repeats content headline instead of structural transition
+
+### D1 Soundness — overclaim trigger-word red flags [NEW v2.2]
+
+Grep-able red flags. When matched in main text (not in cited verbatim quotes), require an explicit scope/evidence footnote within 2 sentences, otherwise -1 on D1:
+
+| Trigger | Safer replacement (use unless scope is tight + evidence is exceptional) |
+|---|---|
+| `prove` / `proves` / `proven` | `show` / `demonstrate` |
+| `conclusively` | `consistently` / (delete) |
+| `unprecedented` | `among the strongest reported` |
+| `best` / `superior` (unqualified) | qualify with cohort: `best in this benchmark` / `among the top` |
+| `first` (unqualified) | `to our knowledge, the first` |
+| `definitely` / `obviously` / `clearly` | (delete) — let evidence carry weight |
+| `significantly better` (no test reported) | report the test + p-value, OR use `outperforms` |
+
+Hedging calibration ladder (claim strength must match evidence):
+
+```
+demonstrate (strong)  ←  suggest (moderate)  ←  may reflect (weak)  ←  is consistent with (very weak)
+```
+
+Evaluator should flag any sentence whose verb sits one rung above what the evidence supports.
+
+### D3 Clarity — section-syntax drift anchors [NEW v2.2]
+
+| Drift | Penalty |
+|---|---|
+| Results paragraph uses `may`, `suggests`, `could indicate`, `is likely due to` (Discussion-style hedging) | -1 on D3 |
+| Discussion paragraph is pure past-tense result restatement with no `may` / `suggest` / `consistent with` / `bounded by` (no interpretation, no boundary) | -1 on D3 |
+| Methods paragraph uses vague stand-ins: `under standard conditions`, `routine methods`, `analyzed statistically`, `the method was validated` | -1 on D3 (and -1 on D5 Reproducibility) |
+
+### D3 Clarity — paragraph-final sentence check [NEW v2.2]
+
+For each paragraph, the **final sentence** is the most likely to bloat or drift. Check explicitly:
+
+- Does it close with the controlling idea or restate the paragraph's claim with implication?  → ok
+- Does it stuff a tangential detail / forward reference / second proposition?  → -1 on D3, mark for split or move
+
+Rule of thumb: if the last sentence > 35 words **and** introduces a new noun phrase not in the topic sentence, split it.
 
 ## Workflow
 
