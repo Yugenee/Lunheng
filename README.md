@@ -61,6 +61,20 @@ This is a Writer-level patch — no workflow changes, no new agents, no new dime
 
 See `skills/lunheng/SKILL.md` Writer HARD CONSTRAINTS §8 and Anti-patterns #6 for the exact prompt language.
 
+### What's new in v2.2 (2026-05-03)
+
+v2.0 / v2.1 caught the high-level pathologies (overstuffing, fake-specific numbers). v2.2 closes a gap at the **sentence-level editorial layer** that audited papers kept tripping on: overclaim verbs, section-syntax drift between Results and Discussion, and weak paragraph-final sentences. Anchors are derived from close-reading practice on Nature s41586 (2026) papers.
+
+Three new grep-able anchor groups, kept under the v2.0 "no net growth" contract (~42 lines of rules added; no new agents, no new dimensions):
+
+1. **D1 overclaim trigger-word red flags + hedging ladder.** The verbs `prove / conclusively / unprecedented / best / first / significantly better` deduct 1 from D1 unless an explicit scope/evidence footnote sits within 2 sentences. Verb strength must match evidence strength along the ladder `demonstrate ← suggest ← may reflect ← is consistent with`; any verb sitting one rung above its evidence is flagged.
+2. **D3 section-syntax drift.** Results paragraphs that sneak in Discussion-style hedging (`may`, `suggests`, `could indicate`), Discussion paragraphs that are pure past-tense result restatement, and Methods paragraphs using vague stand-ins (`under standard conditions`, `analyzed statistically`) each cost D3 a point — Methods drift double-penalises by also costing D5.
+3. **D3 paragraph-final sentence check.** The last sentence of each paragraph is the most likely to bloat or drift. If it exceeds 35 words **and** introduces a noun phrase absent from the topic sentence, deduct 1 from D3 and tag for split.
+
+v2.2 also fixes drift in `docs/EVALUATION_RUBRIC.md`: the English half was missing the entire D9 Narrative section (the Chinese half had it since v2.0); the header read "8 dimensions" and the composite formula was still `R = Σ Dₖ / 8`. v2.2 syncs both halves to `R = Σ Dₖ / 9` over D1–D9.
+
+See `skills/lunheng/SKILL.md` D1/D3 amendments and `docs/EVALUATION_RUBRIC.md` for the exact anchors.
+
 ## Why "Lunheng"?
 
 The name comes from *Lunheng* (《论衡》), Wang Chong's ~80 CE treatise — the first systematic Chinese work on weighing evidence and refuting unsupported claims. Lunheng's job is the same: weigh every claim against the evidence the paper provides, and surface what is unsupported.
@@ -137,8 +151,8 @@ Lunheng will auto-detect `main.tex` as the source, `references.bib` as the bibli
    - `lunheng_workspace/blueprint.md` — section-by-section argument outline + 3 most severe structural issues
    - `lunheng_workspace/visual_contract.json` — registry of every figure/table/term that downstream agents must respect
 
-3. **Step 2 — Evaluator bench (Round 1)** (≈ 3–5 min, 8 sub-agents in parallel)
-   Eight specialized evaluators score each dimension D1–D8 with anchored 1–10 scores. Composite $R_1 = \frac{1}{8} \sum D_k$ is computed.
+3. **Step 2 — Evaluator bench (Round 1)** (≈ 3–5 min, 9 sub-agents in parallel)
+   Nine specialized evaluators score each dimension D1–D9 with anchored 1–10 scores. Composite $R_1 = \frac{1}{9} \sum D_k$ is computed.
 
 4. **Step 3 — Generate-Evaluate-Adapt loop** (≈ 5–10 min per round, only for `tex`/`md`)
    - If $R \geq 7.0$ → **STOP** (paper is at borderline-accept quality).
@@ -246,6 +260,7 @@ This lets you iterate: get a review, manually apply some of the suggestions, the
 | **D6. Citation Quality** | JACS Literature Appropriateness |
 | **D7. Visual & Tabular Communication** | Nature Figure Quality |
 | **D8. Ethics, Limitations & Broader Impact** | NeurIPS Limitations + Ethics |
+| **D9. Narrative Flow & Conciseness** *(v2.0)* | venue-appropriate length + readable prose |
 
 📖 Full rubric with anchored examples → [docs/EVALUATION_RUBRIC.md](docs/EVALUATION_RUBRIC.md)
 
@@ -286,19 +301,19 @@ Lunheng was applied to a Chinese-language chemistry-ML manuscript (DAC sorbents 
 ## Architecture in 60 Seconds
 
 ```
-                Architect ──→ Blueprint + Visual Contract
+                Architect ──→ Blueprint + Visual Contract + Word Budget
                                        │
                 ┌──────────────────────┼──────────────────────┐
                 ▼                      ▼                      ▼
-         Writer (per-section)   Refiner (global)      Evaluator Bench
-         drafts under contract  polish + contract     (8 parallel agents,
-                                update                 one per dimension)
+         Writer (per-section)   Refiner (global) →     Evaluator Bench
+         drafts under contract  Chief Editor (v2.0)    (9 parallel agents,
+         + budget               compresses to budget   one per dimension)
                 │                      │                      │
                 └──────────────────────┴──────────────────────┘
                                        ▼
-                              Aggregate R = Σ Dₖ / 8
-                              R ≥ 7.0  →  STOP
-                              R <  7.0  →  loop back
+                              Aggregate R = Σ Dₖ / 9
+                              R ≥ 7.0 AND words ≤ budget × 1.10  →  STOP
+                              else  →  loop back
 ```
 
 The **Visual Contract** is a JSON file persisting between agent calls. It carries:
@@ -339,10 +354,12 @@ The framework explicitly refuses to invent experimental data; it only flags miss
 - [x] v0.2 — Reproducibility checklist
 - [x] v0.3 — DAC case study public artifact
 - [x] v0.4 — Multi-format support (`.tex` / `.md` / `.docx` / `.pdf`)
-- [ ] v0.5 — Venue-specific rubric profiles (`--venue=neurips/nature/jacs`)
-- [ ] v0.6 — JSON schema validation for visual contract
-- [ ] v0.7 — Telemetry hooks for review-quality monitoring
-- [ ] v1.0 — Stable API + python wrapper for non-Claude-Code users
+- [x] **v2.0** — Venue-aware word budget + Chief Editor + D9 Narrative
+- [x] **v2.1** — Numerical grounding for Writer (anti-placeholder)
+- [x] **v2.2** — Overclaim + section-syntax drift + paragraph-final anchors
+- [ ] v2.3 — JSON schema validation for visual contract
+- [ ] v2.4 — Telemetry hooks for review-quality monitoring
+- [ ] v3.0 — Stable API + python wrapper for non-Claude-Code users
 
 ---
 
@@ -402,6 +419,20 @@ v2.1 为 Writer 加一条硬约束:
 
 这是 Writer 级别的 patch，不改变工作流或智能体数量。详见 `skills/lunheng/SKILL.md` Writer HARD CONSTRAINTS §8。
 
+### v2.2 新增 (2026-05-03)
+
+v2.0 / v2.1 解决了篇章层面的两类病(冗长堆砌、占位符假数据)。v2.2 补的是**句子级编辑层**——审计中反复出现的过头用词、Results 与 Discussion 句法漂移、段尾句失控。规则锚点取自对 Nature s41586 (2026) 论文的 close-reading 实践。
+
+新增三组 grep-able 锚点，严格遵守 v2.0 "净增 ≤30 行规则"约束(本次约 42 行规则，不加 agent，不加 dimension):
+
+1. **D1 过头用词触发清单 + hedging 校准阶梯**: `prove / conclusively / unprecedented / best / first / significantly better` 等词在正文出现且 2 句内无显式 scope/证据脚注时 D1 自动 -1; 动词强度必须匹配证据强度，沿阶梯 `demonstrate ← suggest ← may reflect ← is consistent with` 高出一档则标红。
+2. **D3 章节句法漂移**: Results 段误用 Discussion 风格 hedging (`may`/`suggests`/`could indicate`)、Discussion 段全是过去时结果罗列缺解释、Methods 用 `常规方法`/`统计分析` 等模糊套话——三类各扣 D3 一分; 其中 Methods 漂移**双扣 D3 + D5**。
+3. **D3 段尾句检查**: 每段最后一句最容易膨胀或漂移; 若超过 35 词**且**引入主题句中没有的新名词短语 → D3 -1，标记需拆分。
+
+v2.2 同时修了 `docs/EVALUATION_RUBRIC.md` 的一处历史 drift: 英文版本来漏写了整段 D9 Narrative (中文版从 v2.0 就有), 头部还写"8 dimensions", 综合分公式还是 `R = Σ Dₖ / 8`。v2.2 把英文版补齐到与中文版一致, 综合分统一为 D1–D9 共 9 维度的 `R = Σ Dₖ / 9`。
+
+详见 `skills/lunheng/SKILL.md` D1/D3 amendments 与 `docs/EVALUATION_RUBRIC.md`。
+
 ## 为什么叫"论衡"
 
 王充《论衡》成书约公元80年，是中文世界第一部系统论述"权衡论据、校释虚妄"的著作。本框架的工作本质相同：把论文中的每个claim与其证据进行权衡，识别那些缺乏支撑的部分。
@@ -456,8 +487,8 @@ my_paper/
    检测格式，建立 `<paper_dir>/lunheng_workspace/` 存所有中间产物。
 2. **Step 1 — 架构师**（约1-3分钟，1子代理）
    通读全文，产出 `blueprint.md`（论证大纲+3大结构问题）+ `visual_contract.json`（图表/术语注册表）
-3. **Step 2 — Round 1 评估者团**（约3-5分钟，8并行子代理）
-   按D1-D8锚定打分；综合 $R_1 = \frac{1}{8} \sum D_k$
+3. **Step 2 — Round 1 评估者团**（约3-5分钟，9并行子代理）
+   按D1-D9锚定打分；综合 $R_1 = \frac{1}{9} \sum D_k$
 4. **Step 3 — 改稿循环**（每轮5-10分钟，仅 `tex`/`md`）
    - $R \geq 7.0$ → **STOP**
    - $R < 7.0$ → 撰写者(每低分节1个)+润色者(全局)+再评估，最多3轮
@@ -535,7 +566,7 @@ my_paper/
 | 改稿后LaTeX编译失败 | 撰写者引入语法bug | 从 `lunheng_workspace/main_round0.tex` 恢复，加 `--max_iterations: 0` 仅评审 |
 | 评分多轮不涨 | 某些维度需实际实验agent无法伪造 | 论衡会标记gap，需主人自己跑 |
 
-## 8 维评分体系
+## 9 维评分体系
 
 每维度 **1–10 分制**，4个分数段都有锚点描述（1–3 / 4–6 / 7–8 / 9–10），加 Overall verdict (1–6) 与 Confidence (1–5)。
 
@@ -549,6 +580,7 @@ my_paper/
 | **D6. 引用质量** | JACS Literature Appropriateness |
 | **D7. 图表沟通** | Nature Figure Quality |
 | **D8. 伦理/局限/影响** | NeurIPS Limitations + Ethics |
+| **D9. 叙事流畅与精炼** *(v2.0)* | venue 字数预算 + 散文连贯 |
 
 ## 支持的输入格式
 
